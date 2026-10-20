@@ -15,20 +15,27 @@ def get_geolocator(agent='h501-student'):
     agent : str, optional
         Agent name for Nominatim, by default 'h501-student'
     """
-    return Nominatim(user_agent=agent)
+    return Nominatim(user_agent=agent, timeout=10)
 
 def fetch_location_data(geolocator, loc):
-    location = geolocator.geocode(loc)
+    # location = geolocator.geocode(loc)
 
-    if location is None:
+    try:
+        location = geolocator.geocode(loc)
+
+    except Exception as e:
+        print(f"-- {e} --:\n\t-->", loc)
         return None
     
-    return {"location": loc, "latitude": location.latitude, "longitude": location.longitude, "type": location.geo_type}
+    if location is None:
+        print("Location is None:\n\t-->", loc)
+        return None
+            
+    return {"location": loc, "latitude": location.latitude, "longitude": location.longitude, "type": location.raw['type']}
 
 def build_geo_dataframe(locations):
-    geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
-    
-    return pd.DataFrame(geo_data)
+    geo_data = [fetch_location_data(geo, loc) for loc in locations]
+    return pd.DataFrame(row for row in geo_data if row is not None)
 
 
 if __name__ == "__main__":
