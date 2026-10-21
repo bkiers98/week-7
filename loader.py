@@ -42,7 +42,7 @@ def fetch_location_data(geolocator, loc):
             "longitude": location.longitude,
             "type": location.raw['type']}
 
-def build_geo_dataframe(locations):
+def build_geo_dataframe(locations, geo):
     '''
     Call fetch_location_data for a list of locations and return a pandas
     DataFrame with the resulting data.
@@ -59,6 +59,6 @@ if __name__ == "__main__":
                  "Franklin's Barbecue",
                  "Burj Khalifa"]
 
-    df = build_geo_dataframe(locations)
+    df = build_geo_dataframe(locations, geo)
 
     df.to_csv("./geo_data.csv")
