@@ -26,7 +26,7 @@ def fetch_location_data(geolocator, loc):
     try:
         location = geolocator.geocode(loc)
 
-    except Exception as e:
+    except AttributeError as e:
         print(f"-- {e} --:\n\t-->", loc)
         return None
     
